@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>promise</title>
+  </head>
+  <body>
+    <div>test</div>
+    <!-- jQuery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function callAjax() {
+        // promise를 반환해야함 (그래야 then, catch를 쓸 수 있다.)
+        // 항상 resolve, reject를 인자로 받는다.
+        return new Promise(function (resolve, reject) {
+          $.ajax({
+            url: "https://api.hnpwa.com/v0/news/1.json",
+            success: function (data) {
+              //resolve 성공처리?
+              resolve(data);
+            },
+          });
+        });
+      }
+      function fetchData() {
+        var result = [];
+        callAjax()
+          .then(function (data) {
+            console.log("데이터 호출 결과", data);
+            result = data;
+            console.log("함수 결과2", result);
+            result2 = [];
+            return result2;
+          })
+          .then(function (result) {
+            console.log("연속실행");
+            result2 = result;
+            console.log("함수 결과3", result2);
+          })
+          .then(function (data) {
+            console.log("연속실행");
+            console.log("함수 결과4 data값은?", data);
+          })
+          .then(function (data) {
+            return new Promise(function (resolve, reject) {
+              $.ajax({
+                url: "https://api.hnpwa.com/v0/news/1.json",
+                success: function (data) {
+                  //resolve 성공처리?
+                  resolve(data);
+                },
+              });
+            });
+          })
+          .then(function (data) {
+            console.log("연속실행");
+            console.log("함수 결과5 data값은?", data);
+          });
+        console.log("함수 결과1", result);
+      }
+      fetchData();
+    </script>
+  </body>
+</html>
